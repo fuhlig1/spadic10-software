@@ -1,3 +1,5 @@
+//! \author Michael Krieger
+
 #include <iostream>
 #include "TimesliceInputArchive.hpp"
 #include "TimesliceReader.hpp"
