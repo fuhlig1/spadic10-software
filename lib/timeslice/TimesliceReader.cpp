@@ -28,13 +28,27 @@ void TimesliceReader::read(const fles::Timeslice& ts)
 
 void TimesliceReader::process_raw(const uint16_t *data, size_t len)
 {
-    if (!len) { return; }
+    if (!len) return;
     std::cout << std::endl << "----------- ";
-    for (auto i = 0; i < len; i++) {
-        if (!(i%4)) { std::cout << std::endl; }
-        std::cout << " " << HEX(data[i]);
+    const uint16_t *end = data + len;
+    while (data < end) {
+        size_t j = 0;
+        size_t dtm_len = (data[j++] & 0xFF);
+        if (!dtm_len) { break; }
+        uint16_t cbm_addr = data[j++];
+        std::cout << std::endl << " nnll aaaa";
+        size_t dtm_end = j + dtm_len;
+        while (j < dtm_end) {
+            if (!(j%4)) { std::cout << std::endl; }
+            std::cout << " " << HEX(data[j++]);
+        }
+        while (j%4) {
+            std::cout << " pppp";
+            j++;
+        }
+        std::cout << std::endl;
+        data += j;
     }
-    std::cout << std::endl;
 }
 
 } // namespace
