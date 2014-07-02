@@ -28,5 +28,5 @@ ts_debugger = env.Library('$FLES_DIR/app/tsclient/TimesliceDebugger.cpp')
 #---------------------------------------------------------------------
 
 # build application
-env.Program('tsreader', ['timeslice_reader.cpp'],
+env.Program('tsreader', ['timeslice_reader.cpp', 'TimesliceReader.cpp'],
             LIBS=[fles_ipc, ts_debugger, 'boost_serialization'])
