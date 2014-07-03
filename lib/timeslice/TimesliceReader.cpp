@@ -30,34 +30,19 @@ void TimesliceReader::read(const fles::Timeslice& ts)
 // decode a single microslice
 void TimesliceReader::process_raw(const MicrosliceContents& mc)
 {
-    if (!len) { return; }
-    std::cout << std::endl << "----------- ";
+    if (!mc.size) { return; }
+    std::cout << std::endl << "-----------";
 
     // iterate over DTMs
-    const uint16_t *end = data + len;
-    while (data < end) {
-        // first word is framing
-        size_t j = 0;
-        size_t dtm_len = (data[j++] & 0xFF);
-        std::cout << std::endl << " nnll";
-        // iterate over DTM contents
-        if (dtm_len) {
-            // first word is CBMnet source address
-            uint16_t cbm_addr = data[j++];
-            std::cout << " aaaa";
-            // rest should be payload
-            size_t dtm_end = j + dtm_len;
-            while (j < dtm_end) {
-                if (!(j%4)) { std::cout << std::endl; }
-                std::cout << " " << HEX(data[j++]);
-            }
+    for (const DTM& dtm : mc.get_dtms()) {
+        // first word is CBMnet source address
+        uint16_t cbm_addr = dtm.data[0];
+        std::cout << std::endl << "      aaaa";
+        // rest should be payload
+        for(auto i = 1; i < dtm.size; i++) {
+            if (!((i+1)%4)) { std::cout << std::endl; }
+            std::cout << " " << HEX(dtm.data[i]);
         }
-        // skip padding
-        while (j%4) {
-            std::cout << " pppp";
-            j++;
-        }
-        data += j;
         std::cout << std::endl;
     }
 }
