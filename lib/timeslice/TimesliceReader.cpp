@@ -21,20 +21,21 @@ void TimesliceReader::read(const fles::Timeslice& ts)
             // interpret as 16 bit words, skip descriptor offset
             auto mc_data = reinterpret_cast<const uint16_t*>(p+DESC_OFFSET);
             auto mc_size = (desc.size-DESC_OFFSET)/sizeof(uint16_t);
-            MicrosliceContents mc {mc_data, mc_size};
+            fles::MicrosliceContents mc {mc_data, mc_size};
             process_raw(mc);
         }
     }
 }
 
 // decode a single microslice
-void TimesliceReader::process_raw(const MicrosliceContents& mc)
+void TimesliceReader::process_raw(const fles::MicrosliceContents& mc)
 {
-    if (!mc.size()) { return; }
+    const auto& dtms = mc.dtms();
+    if (!dtms.size()) { return; }
     std::cout << std::endl << "-----------";
 
     // iterate over DTMs
-    for (const DTM& dtm : mc.get_dtms()) {
+    for (const auto& dtm : dtms) {
         // first word is CBMnet source address
         uint16_t cbm_addr = dtm.data[0];
         std::cout << std::endl << "      aaaa";
@@ -47,28 +48,5 @@ void TimesliceReader::process_raw(const MicrosliceContents& mc)
     }
 }
 
-MicrosliceContents::MicrosliceContents(const uint16_t *data, size_t size)
-: _data(data), _size(size)
-{
-    init_dtms();
-}
-
-// extract pointers to DTMs from a microslice
-void MicrosliceContents::init_dtms()
-{
-    _dtms.clear();
-    const uint16_t *w = _data;
-    const uint16_t *end = _data + _size;
-    while (w < end) {
-        size_t i = 0;
-        size_t len = (w[i++] & 0xFF) + 1;
-        if (len > 1) {
-            _dtms.push_back(DTM {w+i, len});
-            i += len;
-        }
-        i += (~i & 3) + 1; // skip padding (i -> k*4)
-        w += i; // update data pointer
-    }
-}
 
 } // namespace
