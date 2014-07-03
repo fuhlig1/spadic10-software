@@ -19,9 +19,9 @@ void TimesliceReader::read(const fles::Timeslice& ts)
             auto p = ts.content(c, m);
 
             // interpret as 16 bit words, skip descriptor offset
-            MicrosliceContents mc;
-            mc.data = reinterpret_cast<const uint16_t*>(p+DESC_OFFSET);
-            mc.size = (desc.size-DESC_OFFSET)/sizeof(uint16_t);
+            auto mc_data = reinterpret_cast<const uint16_t*>(p+DESC_OFFSET);
+            auto mc_size = (desc.size-DESC_OFFSET)/sizeof(uint16_t);
+            MicrosliceContents mc {mc_data, mc_size};
             process_raw(mc);
         }
     }
@@ -30,7 +30,7 @@ void TimesliceReader::read(const fles::Timeslice& ts)
 // decode a single microslice
 void TimesliceReader::process_raw(const MicrosliceContents& mc)
 {
-    if (!mc.size) { return; }
+    if (!mc.size()) { return; }
     std::cout << std::endl << "-----------";
 
     // iterate over DTMs
@@ -47,23 +47,28 @@ void TimesliceReader::process_raw(const MicrosliceContents& mc)
     }
 }
 
-// extract pointers to DTMs from a microslice
-std::vector<DTM> MicrosliceContents::get_dtms() const
+MicrosliceContents::MicrosliceContents(const uint16_t *data, size_t size)
+: _data(data), _size(size)
 {
-    std::vector<DTM> v;
-    const uint16_t *w = data;
-    const uint16_t *end = data + size;
+    init_dtms();
+}
+
+// extract pointers to DTMs from a microslice
+void MicrosliceContents::init_dtms()
+{
+    _dtms.clear();
+    const uint16_t *w = _data;
+    const uint16_t *end = _data + _size;
     while (w < end) {
         size_t i = 0;
         size_t len = (w[i++] & 0xFF) + 1;
         if (len > 1) {
-            v.push_back(DTM {w+i, len});
+            _dtms.push_back(DTM {w+i, len});
             i += len;
         }
         i += (~i & 3) + 1; // skip padding (i -> k*4)
         w += i; // update data pointer
     }
-    return v;
 }
 
 } // namespace
