@@ -21,12 +21,8 @@ except KeyError:
 env.Append(CPPPATH=['$FLES_DIR/lib/fles_ipc'])
 fles_ipc = env.Library(env.Glob('$FLES_DIR/lib/fles_ipc/*.cpp'))
 
-# build timeslice debugger
-env.Append(CPPPATH=['$FLES_DIR/app/tsclient'])
-ts_debugger = env.Library('$FLES_DIR/app/tsclient/TimesliceDebugger.cpp')
-
 #---------------------------------------------------------------------
 
 # build application
 env.Program('tsreader', ['timeslice_reader.cpp', 'TimesliceReader.cpp'],
-            LIBS=[fles_ipc, ts_debugger, 'boost_serialization'])
+            LIBS=[fles_ipc, 'boost_serialization'])
