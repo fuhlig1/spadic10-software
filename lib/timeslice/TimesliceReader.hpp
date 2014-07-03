@@ -7,9 +7,15 @@
 
 namespace spadic {
 
+struct DTM {
+    const uint16_t *data;
+    size_t size;
+};
+
 struct MicrosliceContents {
     const uint16_t *data;
     size_t size;
+    std::vector<DTM> get_dtms() const;
 };
 
 struct TimesliceReader

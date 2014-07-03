@@ -62,4 +62,28 @@ void TimesliceReader::process_raw(const MicrosliceContents& mc)
     }
 }
 
+// extract pointers to DTMs from a microslice
+std::vector<DTM> MicrosliceContents::get_dtms() const
+{
+    std::vector<DTM> v;
+    const uint16_t *w = data;
+    const uint16_t *end = data + size;
+    while (w < end) {
+        size_t i = 0;
+        size_t len = (w[i++] & 0xFF) + 1;
+        if (len > 1) {
+            v.push_back(DTM {w+i, len});
+            i += len;
+        }
+        // Skip the padding by simply increasing i until it is a multiple
+        // of 4. At most 3 iterations are needed.  TODO Check whether it
+        // were faster calculating the final value of i directly.
+        while (i%4) {
+            i++;
+        }
+        w += i;
+    }
+    return v;
+}
+
 } // namespace
