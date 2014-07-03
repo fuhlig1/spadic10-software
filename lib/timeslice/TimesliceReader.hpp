@@ -15,6 +15,7 @@ struct TimesliceReader
 
 private:
     void process_raw(const fles::MicrosliceContents& mc);
+    void process_dtm(const fles::DTM& dtm);
 };
 
 } // namespace
