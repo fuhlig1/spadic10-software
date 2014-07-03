@@ -7,12 +7,17 @@
 
 namespace spadic {
 
+struct MicrosliceContents {
+    const uint16_t *data;
+    size_t size;
+};
+
 struct TimesliceReader
 {
     void read(const fles::Timeslice& ts);
 
 private:
-    void process_raw(const uint16_t *data, size_t len);
+    void process_raw(const MicrosliceContents& mc);
 };
 
 } // namespace

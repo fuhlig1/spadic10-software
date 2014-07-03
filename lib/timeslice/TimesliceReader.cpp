@@ -19,15 +19,16 @@ void TimesliceReader::read(const fles::Timeslice& ts)
             auto p = ts.content(c, m);
 
             // interpret as 16 bit words, skip descriptor offset
-            auto data = reinterpret_cast<const uint16_t*>(p+DESC_OFFSET);
-            size_t len = (desc.size-DESC_OFFSET)/sizeof(uint16_t);
-            process_raw(data, len);
+            MicrosliceContents mc;
+            mc.data = reinterpret_cast<const uint16_t*>(p+DESC_OFFSET);
+            mc.size = (desc.size-DESC_OFFSET)/sizeof(uint16_t);
+            process_raw(mc);
         }
     }
 }
 
 // decode a single microslice
-void TimesliceReader::process_raw(const uint16_t *data, size_t len)
+void TimesliceReader::process_raw(const MicrosliceContents& mc)
 {
     if (!len) { return; }
     std::cout << std::endl << "----------- ";
