@@ -37,7 +37,6 @@ void TimesliceReader::process_raw(const fles::MicrosliceContents& mc)
     // iterate over DTMs
     for (const auto& dtm : dtms) {
         // first word is CBMnet source address
-        uint16_t cbm_addr = dtm.data[0];
         std::cout << std::endl << "      aaaa";
         // rest should be payload
         for(auto i = 1; i < dtm.size; i++) {
