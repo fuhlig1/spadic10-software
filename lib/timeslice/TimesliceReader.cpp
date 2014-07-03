@@ -60,13 +60,8 @@ std::vector<DTM> MicrosliceContents::get_dtms() const
             v.push_back(DTM {w+i, len});
             i += len;
         }
-        // Skip the padding by simply increasing i until it is a multiple
-        // of 4. At most 3 iterations are needed.  TODO Check whether it
-        // were faster calculating the final value of i directly.
-        while (i%4) {
-            i++;
-        }
-        w += i;
+        i += (~i & 3) + 1; // skip padding (i -> k*4)
+        w += i; // update data pointer
     }
     return v;
 }
