@@ -6,7 +6,7 @@
 
 void read_timeslice_archive(const std::string& filename)
 {
-    fles::TimesliceInputArchive ar(filename);
+    fles::TimesliceInputArchive ar {filename};
     spadic::TimesliceReader r;
 
     while (auto p = ar.get()) {
