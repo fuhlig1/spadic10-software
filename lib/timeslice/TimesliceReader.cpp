@@ -13,14 +13,14 @@ void TimesliceReader::read(const fles::Timeslice& ts)
 {
     for (size_t c {0}; c < ts.num_components(); c++) {
         for (size_t m {0}; m < ts.num_microslices(c); m++) {
-            for (auto dtm : ts.microslice_contents(c, m)) {
-                process_dtm(dtm);
-            }
+            auto& desc = ts.descriptor(c, m);
+            auto p = ts.content(c, m);
+            process_raw({p, desc.size});
         }
     }
 }
 
-void TimesliceReader::process_raw(const fles::MicrosliceContents& mc)
+void TimesliceReader::process_raw(const flib_dpb::MicrosliceContents& mc)
 {
     const auto& dtms = mc.dtms();
     if (!dtms.size()) { return; }
@@ -28,10 +28,11 @@ void TimesliceReader::process_raw(const fles::MicrosliceContents& mc)
 
     // iterate over DTMs
     for (const auto& dtm : dtms) {
+        process_dtm(dtm);
     }
 }
 
-void TimesliceReader::process_dtm(const fles::DTM& dtm)
+void TimesliceReader::process_dtm(const flib_dpb::DTM& dtm)
 {
     // first word is CBMnet source address
     std::cout << std::endl << "      aaaa";
