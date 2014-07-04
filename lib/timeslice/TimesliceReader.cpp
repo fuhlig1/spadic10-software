@@ -7,8 +7,6 @@
 // macro stolen from tsclient
 #define HEX(X) std::setw(4) << std::setfill('0') << std::hex << (X)
 
-#define DESC_OFFSET 16
-
 namespace spadic {
 
 void TimesliceReader::read(const fles::Timeslice& ts)
@@ -38,7 +36,7 @@ void TimesliceReader::process_dtm(const fles::DTM& dtm)
     // first word is CBMnet source address
     std::cout << std::endl << "      aaaa";
     // rest should be payload
-    for(size_t i = 1; i < dtm.size; i++) {
+    for (size_t i = 1; i < dtm.size; i++) {
         if (!((i+1)%4)) { std::cout << std::endl; }
         std::cout << " " << HEX(dtm.data[i]);
     }

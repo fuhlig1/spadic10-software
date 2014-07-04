@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     }
     catch (boost::archive::archive_exception& e) {
         std::cout << "Could not read \"" << filename <<
-                     "\" as .tsa file." << std::endl;
+                     "\" as Timeslice archive." << std::endl;
         return 1;
     }
 }
