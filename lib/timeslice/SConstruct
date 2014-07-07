@@ -25,8 +25,14 @@ fles_ipc = env.Library(env.Glob('$FLES_DIR/lib/fles_ipc/*.cpp'))
 env.Append(CPPPATH=['$FLES_DIR/lib/flib_dpb'])
 flib_dpb = env.Library(env.Glob('$FLES_DIR/lib/flib_dpb/*.cpp'))
 
+# build SPADIC Message library
+env.Replace(MSG_DIR='../message')
+env.Append(CPPPATH=['$MSG_DIR', '$MSG_DIR/wrap/cpp'])
+spadic_msg = env.Library([env.Glob('$MSG_DIR/*.c'),
+                          '$MSG_DIR/wrap/cpp/Message.cpp'])
+
 #---------------------------------------------------------------------
 
 # build application
 env.Program('tsreader', ['timeslice_reader.cpp', 'TimesliceReader.cpp'],
-            LIBS=[fles_ipc, flib_dpb, 'boost_serialization'])
+            LIBS=[fles_ipc, flib_dpb, spadic_msg, 'boost_serialization'])
