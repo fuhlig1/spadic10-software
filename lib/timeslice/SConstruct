@@ -10,15 +10,12 @@ if use_clang:
     env.Replace(CXX='clang++')
     env.Append(ENV={'TERM': os.environ['TERM']}) # for color output
 
-# set paths to sources
-requested = {'FLES_DIR': 'the root of the flesnet source tree',
-             'SPADIC_DIR': 'the root of the SPADIC software source tree'}
-for name in requested:
-    try:
-        env.Replace(**{name: os.environ[name]})
-    except KeyError:
-        raise SystemExit("Please set the %s environment variable to %s." %
-                         (name, requested[name]))
+# set path to flesnet sources
+try:
+    env.Replace(FLES_DIR=os.environ['FLES_DIR'])
+except KeyError:
+    raise SystemExit("Please set the FLES_DIR environment variable "
+                     "to the root of the flesnet source tree.")
 
 # build fles_ipc library
 env.Append(CPPPATH=['$FLES_DIR/lib/fles_ipc'])
@@ -29,10 +26,10 @@ env.Append(CPPPATH=['$FLES_DIR/lib/flib_dpb'])
 flib_dpb = env.Library(env.Glob('$FLES_DIR/lib/flib_dpb/*.cpp'))
 
 # build SPADIC Message library
-env.Append(CPPPATH=['$SPADIC_DIR/lib/message',
-                    '$SPADIC_DIR/lib/message/wrap/cpp'])
-spadic_msg = env.Library([env.Glob('$SPADIC_DIR/lib/message/*.c'),
-                          '$SPADIC_DIR/lib/message/wrap/cpp/Message.cpp'])
+env.Replace(MSG_DIR='../message')
+env.Append(CPPPATH=['$MSG_DIR', '$MSG_DIR/wrap/cpp'])
+spadic_msg = env.Library([env.Glob('$MSG_DIR/*.c'),
+                          '$MSG_DIR/wrap/cpp/Message.cpp'])
 
 #---------------------------------------------------------------------
 
