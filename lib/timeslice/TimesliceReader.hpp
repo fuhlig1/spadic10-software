@@ -11,11 +11,9 @@ namespace spadic {
 
 struct TimesliceReader
 {
-    void read(const fles::Timeslice& ts);
+    void add_timeslice(const fles::Timeslice& ts);
 
 private:
-    void process_raw(const flib_dpb::MicrosliceContents& mc);
-    void process_dtm(const flib_dpb::DTM& dtm);
 };
 
 } // namespace

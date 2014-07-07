@@ -10,7 +10,7 @@ void read_timeslice_archive(const std::string& filename)
     spadic::TimesliceReader r;
 
     while (auto p = ar.get()) {
-        r.read(*p);
+        r.add_timeslice(*p);
     }
 }
 
