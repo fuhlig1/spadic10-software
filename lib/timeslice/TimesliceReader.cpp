@@ -22,12 +22,12 @@ void TimesliceReader::read(const fles::Timeslice& ts)
 
 void TimesliceReader::process_raw(const flib_dpb::MicrosliceContents& mc)
 {
-    const auto& dtms = mc.dtms();
+    auto& dtms = mc.dtms();
     if (!dtms.size()) { return; }
     std::cout << std::endl << "-----------";
 
     // iterate over DTMs
-    for (const auto& dtm : dtms) {
+    for (auto& dtm : dtms) {
         process_dtm(dtm);
     }
 }
