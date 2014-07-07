@@ -20,10 +20,8 @@ void read_timeslice_archive(const std::string& filename)
         auto& addr = addr_rdr.first;
         auto& reader = addr_rdr.second;
         std::cout << "---- reader " << addr << " ----" << std::endl;
-        while (std::shared_ptr<spadic::Message> mp {reader.get_message()}) {
-        /*     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         * HOW TO convert to shared_ptr without stating the type again? */
-            print_message(mp);
+        while (auto mp = reader.get_message()) {
+            print_message(std::move(mp));
         }
     }
 }
