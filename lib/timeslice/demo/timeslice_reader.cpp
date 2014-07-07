@@ -39,15 +39,15 @@ void print_message(std::shared_ptr<spadic::Message> mp)
 
 int main(int argc, char* argv[])
 {
+    if (!(argc > 1)) {
+        std::cout << "Please specify path to .tsa file." << std::endl;
+        return 1;
+    }
     std::string filename;
     try {
         filename = argv[1];
         read_timeslice_archive(filename);
         return 0;
-    }
-    catch (std::logic_error& e) {
-        std::cout << "Please specify path to .tsa file." << std::endl;
-        return 1;
     }
     catch (boost::archive::archive_exception& e) {
         std::cout << "Could not read \"" << filename <<
