@@ -4,6 +4,8 @@
 #include "TimesliceInputArchive.hpp"
 #include "TimesliceReader.hpp"
 
+void print_message(std::shared_ptr<spadic::Message> mp);
+
 void read_timeslice_archive(const std::string& filename)
 {
     fles::TimesliceInputArchive ar {filename};
@@ -12,6 +14,29 @@ void read_timeslice_archive(const std::string& filename)
     while (auto p = ar.get()) {
         r.add_timeslice(*p);
     }
+
+    for (auto& addr_rdr : r.readers()) {
+        // HOW TO avoid "first", "second" (like tuple unpacking in Python)?
+        auto& addr = addr_rdr.first;
+        auto& reader = addr_rdr.second;
+        std::cout << "---- reader " << addr << " ----" << std::endl;
+        while (std::shared_ptr<spadic::Message> mp {reader.get_message()}) {
+        /*     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         * HOW TO convert to shared_ptr without stating the type again? */
+            print_message(mp);
+        }
+    }
+}
+
+void print_message(std::shared_ptr<spadic::Message> mp)
+{
+    std::cout << "v: " << (mp->is_valid() ? "o" : "x");
+    std::cout << " / ts: " << mp->timestamp();
+    std::cout << " / samples (" << mp->samples().size() << "):";
+    for (auto x : mp->samples()) {
+        std::cout << " " << x;
+    }
+    std::cout << std::endl;
 }
 
 int main(int argc, char* argv[])
