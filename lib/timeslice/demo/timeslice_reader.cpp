@@ -13,12 +13,12 @@ void read_timeslice_archive(const std::string& filename)
 
     while (auto p = ar.get()) {
         r.add_timeslice(*p);
-    }
 
-    for (auto addr : r.sources()) {
-        std::cout << "---- reader " << addr << " ----" << std::endl;
-        while (auto mp = r.get_message(addr)) {
-            print_message(std::move(mp));
+        for (auto addr : r.sources()) {
+            std::cout << "---- reader " << addr << " ----" << std::endl;
+            while (auto mp = r.get_message(addr)) {
+                print_message(std::move(mp));
+            }
         }
     }
 }
