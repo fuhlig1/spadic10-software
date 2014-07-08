@@ -1,5 +1,10 @@
 //! \author Michael Krieger
 
+/**
+ * Read SPADIC Messages out of Timeslices containing Microslices using the
+ * "packed DTM" format.
+ */
+
 #ifndef SPADIC_TIMESLICE_READER
 #define SPADIC_TIMESLICE_READER
 
