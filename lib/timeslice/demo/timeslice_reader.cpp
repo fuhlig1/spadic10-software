@@ -15,12 +15,9 @@ void read_timeslice_archive(const std::string& filename)
         r.add_timeslice(*p);
     }
 
-    for (auto& addr_rdr : r.readers()) {
-        // HOW TO avoid "first", "second" (like tuple unpacking in Python)?
-        auto& addr = addr_rdr.first;
-        auto& reader = addr_rdr.second;
+    for (auto addr : r.sources()) {
         std::cout << "---- reader " << addr << " ----" << std::endl;
-        while (auto mp = reader.get_message()) {
+        while (auto mp = r.get_message(addr)) {
             print_message(std::move(mp));
         }
     }
