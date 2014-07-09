@@ -17,17 +17,18 @@
 
 namespace spadic {
 
-typedef std::unordered_map<uint16_t, spadic::MessageReader> reader_map;
-
 struct TimesliceReader
 {
+    TimesliceReader();
+    ~TimesliceReader();
+
     void add_timeslice(const fles::Timeslice& ts);
     std::unordered_set<uint16_t> sources();
     std::unique_ptr<spadic::Message> get_message(uint16_t source_addr);
 
 private:
-    void add_mc(const flib_dpb::MicrosliceContents& mc);
-    reader_map _readers; // one MessageReader per CBMnet source address
+    struct TimesliceReader_;
+    std::unique_ptr<TimesliceReader_> _t;
 };
 
 } // namespace

@@ -4,6 +4,22 @@
 
 namespace spadic {
 
+struct TimesliceReader::TimesliceReader_ {
+    std::unordered_map<uint16_t, spadic::MessageReader> _readers;
+    //< one MessageReader per CBMnet source address
+
+    void add_mc(const flib_dpb::MicrosliceContents& mc)
+    {
+        for (auto& dtm : mc.dtms()) {
+            auto& reader = _readers[dtm.data[0]];
+            reader.add_buffer(dtm.data+1, dtm.size-1);
+        }
+    }
+};
+
+TimesliceReader::TimesliceReader() : _t {new TimesliceReader_} {}
+TimesliceReader::~TimesliceReader() {}
+
 void TimesliceReader::add_timeslice(const fles::Timeslice& ts)
 {
     for (size_t c {0}; c < ts.num_components(); c++) {
@@ -12,7 +28,7 @@ void TimesliceReader::add_timeslice(const fles::Timeslice& ts)
             auto p = ts.content(c, m);
             // TODO check sys_id, sys_version
             // TODO check same source address from different components
-            add_mc({p, desc.size});
+            _t->add_mc({p, desc.size});
         }
     }
 }
@@ -20,7 +36,7 @@ void TimesliceReader::add_timeslice(const fles::Timeslice& ts)
 std::unordered_set<uint16_t> TimesliceReader::sources()
 {
     std::unordered_set<uint16_t> result;
-    for (auto& item : _readers) {
+    for (auto& item : _t->_readers) {
         auto addr = item.first;
         result.insert(addr);
     }
@@ -30,15 +46,7 @@ std::unordered_set<uint16_t> TimesliceReader::sources()
 std::unique_ptr<spadic::Message>
 TimesliceReader::get_message(uint16_t source_addr)
 {
-    return _readers[source_addr].get_message();
-}
-
-void TimesliceReader::add_mc(const flib_dpb::MicrosliceContents& mc)
-{
-    for (auto& dtm : mc.dtms()) {
-        auto& reader = _readers[dtm.data[0]];
-        reader.add_buffer(dtm.data+1, dtm.size-1);
-    }
+    return _t->_readers[source_addr].get_message();
 }
 
 } // namespace
