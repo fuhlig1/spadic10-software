@@ -4,7 +4,7 @@
 #include "TimesliceInputArchive.hpp"
 #include "TimesliceReader.hpp"
 
-void print_message(const spadic::Message& mp);
+void print_message(const spadic::Message& m);
 
 void read_timeslice_archive(const std::string& filename)
 {
@@ -23,12 +23,12 @@ void read_timeslice_archive(const std::string& filename)
     }
 }
 
-void print_message(const spadic::Message& mp)
+void print_message(const spadic::Message& m)
 {
-    std::cout << "v: " << (mp.is_valid() ? "o" : "x");
-    std::cout << " / ts: " << mp.timestamp();
-    std::cout << " / samples (" << mp.samples().size() << "):";
-    for (auto x : mp.samples()) {
+    std::cout << "v: " << (m.is_valid() ? "o" : "x");
+    std::cout << " / ts: " << m.timestamp();
+    std::cout << " / samples (" << m.samples().size() << "):";
+    for (auto x : m.samples()) {
         std::cout << " " << x;
     }
     std::cout << std::endl;
