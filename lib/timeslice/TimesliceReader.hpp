@@ -8,12 +8,11 @@
 #ifndef SPADIC_TIMESLICE_READER
 #define SPADIC_TIMESLICE_READER
 
-#include <unordered_map>
-#include <unordered_set>
-
 #include "Message.h"
 #include "Timeslice.hpp"
 #include "MicrosliceContents.hpp"
+
+#include <unordered_set>
 
 namespace spadic {
 

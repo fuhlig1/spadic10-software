@@ -1,6 +1,7 @@
 //! \author Michael Krieger
 
 #include "TimesliceReader.hpp"
+#include <unordered_map>
 
 namespace spadic {
 
