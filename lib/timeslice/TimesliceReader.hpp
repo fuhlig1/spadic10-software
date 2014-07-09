@@ -23,8 +23,8 @@ struct TimesliceReader
     ~TimesliceReader();
 
     void add_timeslice(const fles::Timeslice& ts);
-    std::unordered_set<uint16_t> sources();
-    std::unique_ptr<spadic::Message> get_message(uint16_t source_addr);
+    std::unordered_set<uint16_t> sources() const;
+    std::unique_ptr<spadic::Message> get_message(uint16_t source_addr) const;
 
 private:
     struct TimesliceReader_;

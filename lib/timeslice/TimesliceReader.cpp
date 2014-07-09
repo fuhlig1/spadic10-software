@@ -33,7 +33,7 @@ void TimesliceReader::add_timeslice(const fles::Timeslice& ts)
     }
 }
 
-std::unordered_set<uint16_t> TimesliceReader::sources()
+std::unordered_set<uint16_t> TimesliceReader::sources() const
 {
     std::unordered_set<uint16_t> result;
     for (auto& item : _t->_readers) {
@@ -44,7 +44,7 @@ std::unordered_set<uint16_t> TimesliceReader::sources()
 }
 
 std::unique_ptr<spadic::Message>
-TimesliceReader::get_message(uint16_t source_addr)
+TimesliceReader::get_message(uint16_t source_addr) const
 {
     return _t->_readers[source_addr].get_message();
 }
