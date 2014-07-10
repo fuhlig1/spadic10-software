@@ -11,7 +11,6 @@
 #include "Message.h"
 #include "Timeslice.hpp"
 #include "MicrosliceContents.hpp"
-
 #include <unordered_set>
 
 namespace spadic {
