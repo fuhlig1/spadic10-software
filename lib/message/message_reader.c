@@ -138,12 +138,18 @@ int message_reader_add_buffer(MessageReader *r, const uint16_t *buf, size_t len)
     struct msg_queue q;
     msg_queue_init(&q);
 
-    Message *m;
-    if (!(m = r->msg)) { goto abort; }
+    Message *m = r->msg;
 
     size_t pos = 0;
     while (1) {
         pos += message_read_from_buffer(m, buf+pos, len-pos);
+        /* We avoid calling message_is_complete() if pos < len, because it
+           is true by definition in this case. pos > len is impossible,
+           because message_read_from_buffer() returns at most len-pos. If
+           pos == len and message_is_complete(), we finish the current
+           iteration. In the next iteration, message_reader_add_buffer()
+           will be a no-op and because we created a new message at the end
+           of the current iteration, we will then break. */
         if (!(pos < len) && !(message_is_complete(m))) { break; }
 
         struct msg_item *t;
@@ -154,9 +160,9 @@ int message_reader_add_buffer(MessageReader *r, const uint16_t *buf, size_t len)
         if (!(m = message_new())) { goto abort; }
     }
 
-    msg_queue_extend(&r->messages, &q);
-
     r->msg = m;
+
+    msg_queue_extend(&r->messages, &q);
     return 0;
 
 abort:
