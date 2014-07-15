@@ -21,8 +21,8 @@
  * Stop types as returned by message_get_stop_type().
  */
 enum stop_types {
-#define STOP(X) s##X
-#include "constants/stop_types.h"
+#define STOP(K, V) s##K = V,
+#include "constants/stop_types.inc"
 #undef STOP
 };
 
@@ -30,8 +30,8 @@ enum stop_types {
  * Info types as returned by message_get_info_type().
  */
 enum info_types {
-#define INFO(X) i##X
-#include "constants/info_types.h"
+#define INFO(K, V) i##K = V,
+#include "constants/info_types.inc"
 #undef INFO
 };
 
@@ -39,8 +39,8 @@ enum info_types {
  * Hit types as returned by message_get_hit_type().
  */
 enum hit_types {
-#define HIT(X) h##X
-#include "constants/hit_types.h"
+#define HIT(K, V) h##K = V,
+#include "constants/hit_types.inc"
 #undef HIT
 };
 
