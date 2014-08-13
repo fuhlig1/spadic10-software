@@ -57,7 +57,7 @@ struct Message {
 
 struct MessageReader {
     MessageReader();
-    MessageReader (MessageReader&& rhs);
+    MessageReader(MessageReader&& rhs);
     ~MessageReader();
 
     void reset();
