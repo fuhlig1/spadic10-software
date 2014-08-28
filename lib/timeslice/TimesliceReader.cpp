@@ -25,11 +25,10 @@ void TimesliceReader::add_timeslice(const fles::Timeslice& ts)
 {
     for (size_t c {0}; c < ts.num_components(); c++) {
         for (size_t m {0}; m < ts.num_microslices(c); m++) {
-            auto& desc = ts.descriptor(c, m);
-            auto p = ts.content(c, m);
+            auto mc = ts.get_microslice(c, m);
             // TODO check sys_id, sys_version
             // TODO check same source address from different components
-            _t->add_mc({p, desc.size});
+            _t->add_mc({mc.content, mc.desc.size});
         }
     }
 }
