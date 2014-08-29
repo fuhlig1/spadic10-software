@@ -24,12 +24,17 @@ TimesliceReader::~TimesliceReader() {}
 void TimesliceReader::add_timeslice(const fles::Timeslice& ts)
 {
     for (size_t c {0}; c < ts.num_components(); c++) {
-        for (size_t m {0}; m < ts.num_microslices(c); m++) {
-            auto mc = ts.get_microslice(c, m);
-            // TODO check sys_id, sys_version
-            // TODO check same source address from different components
-            _t->add_mc({mc.content, mc.desc.size});
-        }
+      add_timeslice(ts, c);
+    }
+}
+
+void TimesliceReader::add_timeslice(const fles::Timeslice& ts, size_t component)
+{
+    for (size_t m {0}; m < ts.num_microslices(component); m++) {
+      auto& desc = ts.descriptor(component, m);	
+      auto p = ts.content(component, m);
+      // TODO check same source address from different components
+      _t->add_mc({p, desc.size});
     }
 }
 
